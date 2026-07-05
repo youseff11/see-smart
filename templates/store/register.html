@@ -1,0 +1,122 @@
+{% extends "store/base.html" %}
+
+{% block title %}Register — Smart Engineering{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-page {
+        min-height: calc(100vh - 72px);
+        display: grid; place-items: center;
+        padding: 40px 24px;
+        background: var(--gray-50);
+    }
+    .auth-card {
+        max-width: 500px; width: 100%;
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--gray-100);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+    }
+    .auth-top {
+        background: var(--navy);
+        padding: 40px 36px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .auth-top::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 50% 80%, rgba(27,77,219,0.2), transparent 60%);
+    }
+    .auth-top .icon {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        display: grid; place-items: center;
+        margin: 0 auto 16px;
+        font-size: 1.3rem; color: var(--gold);
+        position: relative;
+    }
+    .auth-top h2 { font-size: 1.4rem; font-weight: 700; color: #fff; position: relative; }
+    .auth-top p { font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-top: 6px; position: relative; }
+    .auth-body { padding: 36px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+        display: block; font-size: 0.82rem;
+        font-weight: 600; margin-bottom: 6px; color: var(--charcoal);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-errors {
+        font-size: 0.78rem; color: var(--danger); margin-top: 4px;
+    }
+    .form-errors ul { list-style: none; }
+    .auth-footer {
+        text-align: center;
+        padding: 0 36px 32px;
+        font-size: 0.85rem; color: var(--gray-400);
+    }
+    .auth-footer a { color: var(--royal); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { color: var(--gold); }
+
+    @media (max-width: 480px) {
+        .form-row { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-card reveal">
+        <div class="auth-top">
+            <div class="icon"><i class="fas fa-user-plus"></i></div>
+            <h2>Create Account</h2>
+            <p>Join Smart Engineering today</p>
+        </div>
+        <div class="auth-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}<div class="form-errors">{{ form.first_name.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}<div class="form-errors">{{ form.last_name.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<div class="form-errors">{{ form.username.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div class="form-errors">{{ form.email.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}<div class="form-errors">{{ form.password1.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}<div class="form-errors">{{ form.password2.errors }}</div>{% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%;margin-top:8px;">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+        </div>
+        <div class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}">Log In</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

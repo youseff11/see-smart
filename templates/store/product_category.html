@@ -1,0 +1,86 @@
+{% extends "store/base.html" %}
+
+{% block title %}{{ category.name }} — Smart Engineering{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cat-section { padding: 80px 32px; }
+    .cat-container { max-width: 1280px; margin: 0 auto; }
+    .subcat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+    }
+    .subcat-card {
+        text-decoration: none;
+        color: var(--charcoal);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        background: var(--white);
+        border: 1.5px solid var(--gray-100);
+        transition: all 0.35s var(--ease);
+    }
+    .subcat-card:hover {
+        border-color: var(--royal);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-6px);
+    }
+    .subcat-img {
+        height: 170px;
+        background: var(--gray-50);
+        display: grid; place-items: center;
+        overflow: hidden;
+    }
+    .subcat-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease); }
+    .subcat-card:hover .subcat-img img { transform: scale(1.05); }
+    .subcat-img i { font-size: 2.5rem; color: var(--gray-200); }
+    .subcat-info { padding: 20px 24px; }
+    .subcat-info h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .subcat-info .link {
+        display: inline-flex; align-items: center; gap: 6px;
+        color: var(--royal); font-weight: 600; font-size: 0.82rem;
+        transition: all 0.2s;
+    }
+    .subcat-card:hover .link { gap: 10px; color: var(--gold); }
+
+    @media (max-width: 640px) {
+        .subcat-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <h1>{{ category.name }}</h1>
+    <p class="subtitle">Browse subcategories and products</p>
+    <div class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'products' %}">Products</a>
+        <span class="sep">/</span>
+        <span class="current">{{ category.name }}</span>
+    </div>
+</section>
+
+<section class="cat-section">
+    <div class="cat-container">
+        <div class="subcat-grid">
+            {% for sub in subcategories %}
+            <a href="{% url 'product_subcategory' category.slug sub.slug %}" class="subcat-card reveal">
+                <div class="subcat-img">
+                    {% if sub.image %}
+                    <img src="{{ sub.image.url }}" alt="{{ sub.name }}">
+                    {% else %}
+                    <i class="fas fa-cog"></i>
+                    {% endif %}
+                </div>
+                <div class="subcat-info">
+                    <h3>{{ sub.name }}</h3>
+                    <span class="link">View Products <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

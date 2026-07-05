@@ -1,0 +1,162 @@
+{% extends "store/base.html" %}
+
+{% block title %}{{ event.title }} — Smart Engineering{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-section { padding: 60px 32px 80px; }
+    .detail-container { max-width: 860px; margin: 0 auto; }
+    .detail-content {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 44px;
+        border: 1px solid var(--gray-100);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 40px;
+    }
+    .detail-content p {
+        font-size: 1rem; color: var(--gray-600);
+        line-height: 1.9; white-space: pre-wrap;
+    }
+
+    .gallery h3 {
+        font-size: 1.2rem; font-weight: 700;
+        margin-bottom: 20px;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .gallery h3 i { color: var(--gold); }
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 14px;
+    }
+    .gallery-item {
+        border-radius: var(--radius);
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        aspect-ratio: 4/3;
+        border: 1px solid var(--gray-100);
+        transition: all 0.3s var(--ease);
+    }
+    .gallery-item:hover { transform: scale(1.02); box-shadow: var(--shadow-md); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-item .ov {
+        position: absolute; inset: 0;
+        background: rgba(0,0,0,0);
+        display: grid; place-items: center;
+        transition: background 0.3s;
+    }
+    .gallery-item:hover .ov { background: rgba(10,22,40,0.35); }
+    .gallery-item .ov i {
+        color: #fff; font-size: 1.3rem;
+        opacity: 0; transform: scale(0.8);
+        transition: all 0.3s var(--ease);
+    }
+    .gallery-item:hover .ov i { opacity: 1; transform: scale(1); }
+
+    /* Lightbox */
+    .lightbox {
+        position: fixed; inset: 0;
+        background: rgba(10,22,40,0.95);
+        z-index: 3000;
+        display: none; align-items: center; justify-content: center;
+        padding: 40px;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 90%; max-height: 85vh; object-fit: contain; border-radius: var(--radius); }
+    .lb-close {
+        position: absolute; top: 20px; right: 20px;
+        color: #fff; font-size: 1.8rem; cursor: pointer;
+        background: none; border: none;
+        width: 44px; height: 44px; border-radius: 50%;
+        display: grid; place-items: center; transition: all 0.2s;
+    }
+    .lb-close:hover { background: rgba(255,255,255,0.1); }
+    .lb-nav {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        color: #fff; font-size: 1.2rem; cursor: pointer;
+        background: rgba(255,255,255,0.08); border: none;
+        width: 48px; height: 48px; border-radius: 50%;
+        display: grid; place-items: center; transition: all 0.2s;
+    }
+    .lb-nav:hover { background: rgba(255,255,255,0.15); }
+    .lb-prev { left: 20px; }
+    .lb-next { right: 20px; }
+    .lb-cap {
+        position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+        color: rgba(255,255,255,0.6); font-size: 0.85rem; text-align: center;
+    }
+
+    .back-link {
+        display: inline-flex; align-items: center; gap: 8px;
+        color: var(--royal); font-weight: 600; text-decoration: none;
+        transition: all 0.2s; margin-top: 24px;
+    }
+    .back-link:hover { gap: 12px; color: var(--gold); }
+
+    @media (max-width: 640px) {
+        .detail-content { padding: 24px; }
+        .gallery-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <h1>{{ event.title }}</h1>
+    <p class="subtitle"><i class="far fa-calendar-alt"></i> {{ event.created_at|date:"F d, Y" }}</p>
+    <div class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'news' %}">News</a>
+        <span class="sep">/</span>
+        <span class="current">{{ event.title|truncatewords:5 }}</span>
+    </div>
+</section>
+
+<section class="detail-section">
+    <div class="detail-container">
+        <div class="detail-content reveal">
+            <p>{{ event.description }}</p>
+        </div>
+
+        {% if event.images.exists %}
+        <div class="gallery reveal">
+            <h3><i class="fas fa-images"></i> Gallery ({{ event.images.count }} photos)</h3>
+            <div class="gallery-grid">
+                {% for img in event.images.all %}
+                <div class="gallery-item" onclick="openLightbox({{ forloop.counter0 }})">
+                    <img src="{{ img.image.url }}" alt="{{ img.caption|default:event.title }}" loading="lazy">
+                    <div class="ov"><i class="fas fa-expand"></i></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <a href="{% url 'news' %}" class="back-link"><i class="fas fa-arrow-left"></i> Back to News</a>
+    </div>
+</section>
+
+<div class="lightbox" id="lightbox">
+    <button class="lb-close" onclick="closeLightbox()">&times;</button>
+    <button class="lb-nav lb-prev" onclick="navLB(-1)"><i class="fas fa-chevron-left"></i></button>
+    <img id="lb-img" src="" alt="">
+    <button class="lb-nav lb-next" onclick="navLB(1)"><i class="fas fa-chevron-right"></i></button>
+    <div class="lb-cap" id="lb-cap"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const imgs=[{% for img in event.images.all %}{src:"{{ img.image.url }}",cap:"{{ img.caption|default:'' }}"},{% endfor %}];
+    let ci=0;
+    function openLightbox(i){ci=i;updLB();document.getElementById('lightbox').classList.add('active');document.body.style.overflow='hidden';}
+    function closeLightbox(){document.getElementById('lightbox').classList.remove('active');document.body.style.overflow='';}
+    function navLB(d){ci=(ci+d+imgs.length)%imgs.length;updLB();}
+    function updLB(){document.getElementById('lb-img').src=imgs[ci].src;document.getElementById('lb-cap').textContent=imgs[ci].cap||`Photo ${ci+1} of ${imgs.length}`;}
+    document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLightbox();});
+    document.addEventListener('keydown',e=>{if(!document.getElementById('lightbox').classList.contains('active'))return;if(e.key==='Escape')closeLightbox();if(e.key==='ArrowLeft')navLB(-1);if(e.key==='ArrowRight')navLB(1);});
+</script>
+{% endblock %}

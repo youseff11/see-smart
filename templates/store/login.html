@@ -1,0 +1,103 @@
+{% extends "store/base.html" %}
+
+{% block title %}Log In — Smart Engineering{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-page {
+        min-height: calc(100vh - 72px);
+        display: grid; place-items: center;
+        padding: 40px 24px;
+        background: var(--gray-50);
+    }
+    .auth-card {
+        max-width: 440px; width: 100%;
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--gray-100);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+    }
+    .auth-top {
+        background: var(--navy);
+        padding: 40px 36px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .auth-top::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 50% 80%, rgba(27,77,219,0.2), transparent 60%);
+    }
+    .auth-top .icon {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        display: grid; place-items: center;
+        margin: 0 auto 16px;
+        font-size: 1.3rem; color: var(--gold);
+        position: relative;
+    }
+    .auth-top h2 { font-size: 1.4rem; font-weight: 700; color: #fff; position: relative; }
+    .auth-top p { font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-top: 6px; position: relative; }
+    .auth-body { padding: 36px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+        display: block; font-size: 0.82rem;
+        font-weight: 600; margin-bottom: 6px; color: var(--charcoal);
+    }
+    .form-errors {
+        background: #FEF2F2;
+        border-left: 3px solid var(--danger);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        margin-bottom: 18px;
+        font-size: 0.82rem; color: #991B1B;
+    }
+    .form-errors ul { list-style: none; }
+    .auth-footer {
+        text-align: center;
+        padding: 0 36px 32px;
+        font-size: 0.85rem; color: var(--gray-400);
+    }
+    .auth-footer a { color: var(--royal); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { color: var(--gold); }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-card reveal">
+        <div class="auth-top">
+            <div class="icon"><i class="fas fa-sign-in-alt"></i></div>
+            <h2>Welcome Back</h2>
+            <p>Log in to your account</p>
+        </div>
+        <div class="auth-body">
+            {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<div class="form-errors">{{ form.username.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}<div class="form-errors">{{ form.password.errors }}</div>{% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%;margin-top:8px;">
+                    <i class="fas fa-sign-in-alt"></i> Log In
+                </button>
+            </form>
+        </div>
+        <div class="auth-footer">
+            Don't have an account? <a href="{% url 'register' %}">Register</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
