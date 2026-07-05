@@ -1,0 +1,45 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Page Not Found — Smart Engineering{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-page {
+        min-height: calc(100vh - 72px);
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 60px 24px;
+        background: var(--off-white);
+    }
+    .error-code {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 7rem;
+        font-weight: 900;
+        line-height: 1;
+        background: linear-gradient(135deg, var(--royal), var(--gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+    }
+    .error-page h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; }
+    .error-page p { font-size: 0.95rem; color: var(--gray-500); max-width: 440px; margin: 0 auto 32px; line-height: 1.7; }
+    .error-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="error-page">
+    <div class="reveal visible">
+        <div class="error-code">404</div>
+        <h2>Page Not Found</h2>
+        <p>The page you're looking for doesn't exist or may have been moved. Let's get you back on track.</p>
+        <div class="error-actions">
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg"><i class="fas fa-home"></i> Back to Home</a>
+            <a href="{% url 'products' %}" class="btn btn-ghost btn-lg"><i class="fas fa-box-open"></i> Browse Products</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,785 +1,224 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Smart Engineering — Leading supplier of Electrical & Safety solutions in Egypt and the Middle East.">
-    <title>{% block title %}Smart Engineering{% endblock %}</title>
-    
-    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+{% extends "store/base.html" %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --navy: #0A1628;
-            --navy-light: #131E36;
-            --royal: #1B4DDB;
-            --royal-hover: #1641BE;
-            --electric: #3B82F6;
-            --gold: #F59E0B;
-            --gold-hover: #D97706;
-            --white: #FFFFFF;
-            --off-white: #F8FAFC;
-            --gray-50: #F0F4F8;
-            --gray-100: #E2E8F0;
-            --gray-200: #CBD5E1;
-            --gray-400: #94A3B8;
-            --gray-500: #64748B;
-            --gray-600: #475569;
-            --gray-700: #334155;
-            --charcoal: #0F172A;
-            --success: #10B981;
-            --danger: #EF4444;
-            --radius-sm: 8px;
-            --radius: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
-            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.03);
-            --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.15);
-            --ease: cubic-bezier(0.4, 0, 0.2, 1);
-            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
+{% block title %}About Us — Smart Engineering{% endblock %}
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--off-white);
-            color: var(--gray-600);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--charcoal);
-            line-height: 1.2;
-        }
-
-        /* ═══════════════════════════════
-           NAVBAR
-        ═══════════════════════════════ */
-        .navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            background: rgba(255,255,255,0.72);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid rgba(0,0,0,0.04);
-            transition: all 0.4s var(--ease);
-        }
-        .navbar.scrolled {
-            background: rgba(255,255,255,0.92);
-            box-shadow: 0 1px 40px rgba(0,0,0,0.06);
-        }
-        .nav-inner {
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 72px;
-        }
-
-        /* Brand / Logo */
-        .brand {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* يضمن التوسط الأفقي أيضاً داخل حاويته */
-            text-decoration: none;
-            position: relative;
-            z-index: 1002;
-            height: 100%; /* يجعل الحاوية تأخذ الارتفاع الكامل للـ navbar ليتم التوسط بدقة */
-            margin: 0; /* تم حذف الـ margin-top لأنه يسبب عدم اتزان اللوجو رأسياً */
-        }
-        .brand-logo {
-            margin-top: 15px;
-            height: 110px; /* الارتفاع الذي اخترته للوجو */
-            width: auto;
-            max-width: 100%; 
-            object-fit: contain;
-            display: block; /* يلغي أي مسافات مخفية أسفل الصورة */
-            transition: transform 0.3s var(--ease);
-        }
-        .brand:hover .brand-logo { 
-            transform: scale(1.05); 
-        }
-        /* Nav Menu (Desktop Wrapper) */
-        .nav-menu {
-            display: flex;
-            flex: 1;
-            align-items: center;
-            justify-content: space-between;
-            margin-left: 48px;
-        }
-
-        /* Nav links */
-        .nav-center {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .nav-center a {
-            text-decoration: none;
-            color: var(--gray-500);
-            padding: 8px 18px;
-            border-radius: var(--radius-sm);
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.25s var(--ease);
-            position: relative;
-        }
-        .nav-center a:hover { color: var(--royal); background: rgba(27,77,219,0.04); }
-        .nav-center a.active { color: var(--royal); font-weight: 600; }
-        .nav-center a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 20px; height: 2.5px;
-            background: var(--royal);
-            border-radius: 4px;
-        }
-
-        /* Dropdown */
-        .dropdown { position: relative; }
-        .dropdown-panel {
-            position: absolute;
-            top: calc(100% + 12px);
-            left: 50%;
-            transform: translateX(-50%) translateY(8px);
-            min-width: 240px;
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--gray-100);
-            padding: 8px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.25s var(--ease);
-            z-index: 100;
-        }
-        .dropdown:hover .dropdown-panel {
-            opacity: 1; visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .dropdown-panel a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            font-size: 0.88rem;
-            color: var(--gray-600);
-        }
-        .dropdown-panel a::after { display: none; }
-        .dropdown-panel a:hover { background: var(--gray-50); color: var(--royal); }
-        .dropdown-panel a i { color: var(--gold); font-size: 0.85rem; width: 18px; text-align: center; }
-
-        /* Nav right */
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .nav-user {
-            font-size: 0.88rem;
-            color: var(--gray-500);
-            font-weight: 500;
-            padding-right: 12px;
-            border-right: 1px solid var(--gray-200);
-            margin-right: 4px;
-        }
-        .nav-user i { margin-right: 6px; color: var(--royal); }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 24px;
-            border-radius: var(--radius-sm);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 600;
-            font-size: 0.88rem;
-            cursor: pointer;
-            border: none;
-            transition: all 0.25s var(--ease);
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .btn-ghost {
-            background: transparent;
-            color: var(--gray-600);
-            border: 1.5px solid var(--gray-200);
-        }
-        .btn-ghost:hover {
-            border-color: var(--royal);
-            color: var(--royal);
-            background: rgba(27,77,219,0.03);
-        }
-        .btn-primary {
-            background: var(--royal);
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(27,77,219,0.3);
-        }
-        .btn-primary:hover {
-            background: var(--royal-hover);
-            box-shadow: 0 4px 16px rgba(27,77,219,0.35);
-            transform: translateY(-1px);
-        }
-        .btn-gold {
-            background: var(--gold);
-            color: var(--charcoal);
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(245,158,11,0.3);
-        }
-        .btn-gold:hover {
-            background: var(--gold-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(245,158,11,0.35);
-        }
-        .btn-white {
-            background: rgba(255,255,255,0.12);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(4px);
-        }
-        .btn-white:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        .btn-lg { padding: 14px 32px; font-size: 0.95rem; border-radius: var(--radius); }
-
-        /* Mobile menu */
-        .nav-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 8px;
-            border: none;
-            background: none;
-            z-index: 1002;
-        }
-        .nav-toggle span {
-            width: 22px; height: 2px;
-            background: var(--charcoal);
-            border-radius: 2px;
-            transition: all 0.3s var(--ease);
-        }
-        .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .nav-toggle.active span:nth-child(2) { opacity: 0; }
-        .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-        .menu-overlay {
-            position: fixed; inset: 0;
-            background: rgba(10,22,40,0.3);
-            backdrop-filter: blur(4px);
-            opacity: 0; visibility: hidden;
-            transition: all 0.3s var(--ease);
-            z-index: 998;
-        }
-        .menu-overlay.active { opacity: 1; visibility: visible; }
-
-        @media (max-width: 1024px) {
-            .nav-toggle { display: flex; }
-            
-            .nav-menu {
-                position: fixed;
-                top: 0; right: -320px;
-                width: 300px; height: 100vh;
-                background: var(--white);
-                flex-direction: column;
-                justify-content: flex-start;
-                margin-left: 0;
-                padding: 88px 24px 32px; 
-                box-shadow: -8px 0 40px rgba(0,0,0,0.08);
-                transition: right 0.35s var(--ease);
-                z-index: 999;
-                overflow-y: auto;
-            }
-            .nav-menu.open { right: 0; }
-
-            .nav-center {
-                flex-direction: column;
-                align-items: stretch;
-                width: 100%;
-                gap: 4px;
-            }
-            .nav-center a { padding: 14px 16px; border-radius: var(--radius-sm); }
-            .nav-center a.active::after { display: none; }
-            .nav-center a:hover, .nav-center a.active { background: var(--gray-50); }
-            
-            /* حل مشكلة تحرك القائمة عند اللمس بفرض الثبات في وضع الموبايل */
-            .dropdown-panel, .dropdown:hover .dropdown-panel {
-                position: static;
-                transform: none !important;
-                box-shadow: none;
-                border: none;
-                background: var(--gray-50);
-                margin: 4px 0 4px 16px;
-                padding: 4px;
-                border-radius: var(--radius-sm);
-                opacity: 1; visibility: visible;
-                display: none;
-            }
-            .dropdown.open .dropdown-panel { display: block; }
-            
-            .nav-right {
-                flex-direction: column;
-                width: 100%;
-                margin-top: 24px;
-                padding-top: 24px;
-                border-top: 1px solid var(--gray-100);
-            }
-            .nav-right .btn { width: 100%; justify-content: center; }
-            .nav-user { 
-                border-right: none; 
-                padding-right: 0; 
-                margin-bottom: 12px; 
-                width: 100%; 
-                text-align: center; 
-            }
-        }
-
-        /* ═══════════════════════════════
-           MESSAGES
-        ═══════════════════════════════ */
-        .toast-container {
-            position: fixed;
-            top: 84px; right: 24px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .toast {
-            padding: 14px 20px;
-            border-radius: var(--radius);
-            font-size: 0.88rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: var(--shadow-lg);
-            animation: toastIn 0.4s var(--ease);
-            min-width: 280px;
-            border-left: 4px solid;
-        }
-        .toast-success { background: #ECFDF5; color: #065F46; border-color: var(--success); }
-        .toast-error { background: #FEF2F2; color: #991B1B; border-color: var(--danger); }
-        .toast-info { background: #EFF6FF; color: #1E40AF; border-color: var(--royal); }
-        .toast .close-toast {
-            margin-left: auto; cursor: pointer; opacity: 0.4;
-            background: none; border: none; font-size: 1.1rem; color: inherit;
-        }
-        .toast .close-toast:hover { opacity: 1; }
-        @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } }
-
-        /* ═══════════════════════════════
-           MAIN
-        ═══════════════════════════════ */
-        .main { margin-top: 72px; min-height: calc(100vh - 72px); }
-
-        /* ═══════════════════════════════
-           PAGE HERO (inner pages)
-        ═══════════════════════════════ */
-        .page-hero {
-            background: var(--navy);
-            padding: 100px 32px 64px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .page-hero::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: radial-gradient(ellipse at 30% 50%, rgba(27,77,219,0.15), transparent 60%),
-                        radial-gradient(ellipse at 70% 80%, rgba(245,158,11,0.08), transparent 50%);
-        }
-        .page-hero h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #fff;
-            position: relative;
-            letter-spacing: -0.5px;
-        }
-        .page-hero .subtitle {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.5);
-            margin-top: 10px;
-            position: relative;
-        }
-        .breadcrumb {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            margin-top: 20px;
-            font-size: 0.82rem;
-            position: relative;
-        }
-        .breadcrumb a { color: var(--gold); text-decoration: none; transition: color 0.2s; }
-        .breadcrumb a:hover { color: #fff; }
-        .breadcrumb .sep { color: rgba(255,255,255,0.25); }
-        .breadcrumb .current { color: rgba(255,255,255,0.4); }
-
-        /* ═══════════════════════════════
-           SECTIONS / UTILITIES
-        ═══════════════════════════════ */
-        .section { padding: 100px 32px; }
-        .container { max-width: 1280px; margin: 0 auto; }
-        .section-label {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--royal);
-            margin-bottom: 12px;
-        }
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--charcoal);
-            letter-spacing: -0.5px;
-            margin-bottom: 16px;
-        }
-        .section-desc {
-            font-size: 1.02rem;
-            color: var(--gray-500);
-            max-width: 560px;
-            line-height: 1.7;
-        }
-        .section-header { margin-bottom: 56px; }
-        .section-header.center { text-align: center; }
-        .section-header.center .section-desc { margin: 0 auto; }
-
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--gray-100);
-            transition: all 0.35s var(--ease);
-            overflow: hidden;
-        }
-        .card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-4px);
-            border-color: rgba(27,77,219,0.12);
-        }
-
-        /* Form inputs */
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid var(--gray-200);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 0.9rem;
-            color: var(--charcoal);
-            background: var(--white);
-            transition: all 0.25s var(--ease);
-            outline: none;
-        }
-        .form-input:focus {
-            border-color: var(--royal);
-            box-shadow: 0 0 0 3px rgba(27,77,219,0.08);
-        }
-        textarea.form-input { resize: vertical; min-height: 120px; }
-
-        /* Reveal animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-        .reveal-delay-4 { transition-delay: 0.4s; }
-
-        /* ═══════════════════════════════
-           FOOTER
-        ═══════════════════════════════ */
-        .footer {
-            background: var(--navy);
-            color: rgba(255,255,255,0.6);
-            padding: 80px 32px 0;
-        }
-        .footer-brand img {
-            width: 110px;
-            height: auto; /* للحفاظ على أبعاد الشعار تناسقية */
-        }
-        .footer-grid {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            gap: 48px;
-        }
-        .footer-brand { margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-        .footer-about { font-size: 0.88rem; line-height: 1.8; margin-bottom: 24px; }
-        .footer-socials { display: flex; gap: 10px; }
-        .footer-socials a {
-            width: 38px; height: 38px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.06);
-            display: grid; place-items: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.95rem;
-            text-decoration: none;
-            transition: all 0.25s var(--ease);
-        }
-        .footer-socials a:hover {
-            background: var(--royal);
-            color: #fff;
-            transform: translateY(-3px);
-        }
-
-        .footer-col h4 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-        }
-        .footer-col a {
-            display: block;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.45);
-            text-decoration: none;
-            padding: 6px 0;
-            transition: all 0.25s var(--ease);
-        }
-        .footer-col a:hover { color: var(--gold); padding-left: 4px; }
-        .footer-col .contact-line {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 0.85rem; padding: 6px 0;
-        }
-        .footer-col .contact-line i { color: var(--gold); font-size: 0.8rem; width: 16px; }
-
-        .footer-bottom {
-            max-width: 1280px;
-            margin: 56px auto 0;
-            padding: 24px 0;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            text-align: center;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.25);
-        }
-
-        /* Scroll-top */
-        .scroll-top {
-            position: fixed;
-            bottom: 28px; right: 28px;
-            width: 46px; height: 46px;
-            background: var(--royal);
-            color: #fff; border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-size: 1rem;
-            box-shadow: 0 4px 16px rgba(27,77,219,0.3);
-            transition: all 0.3s var(--ease);
-            opacity: 0; visibility: hidden;
-            z-index: 999;
-            display: grid; place-items: center;
-        }
-        .scroll-top.visible { opacity: 1; visibility: visible; }
-        .scroll-top:hover { background: var(--gold); transform: translateY(-4px); box-shadow: 0 6px 20px rgba(245,158,11,0.3); }
-
-        @media (max-width: 1024px) {
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 640px) {
-            .footer-grid { grid-template-columns: 1fr; gap: 36px; }
-            .section { padding: 64px 20px; }
-            .page-hero { padding: 88px 20px 52px; }
-            .page-hero h1 { font-size: 1.8rem; }
-            .section-title { font-size: 1.7rem; }
-            .nav-inner { padding: 0 16px; }
-        }
-    </style>
-    {% block extra_css %}{% endblock %}
-</head>
-<body>
-
-<nav class="navbar" id="navbar">
-    <div class="nav-inner">
-        <a href="{% url 'home' %}" class="brand">
-            <img src="{% static 'images/logo.png' %}" alt="Smart Engineering Logo" class="brand-logo">
-        </a>
-
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle Menu">
-            <span></span><span></span><span></span>
-        </button>
-
-        <div class="menu-overlay" id="menuOverlay"></div>
-
-        <div class="nav-menu" id="navMenu">
-            <div class="nav-center">
-                <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
-                <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
-                <div class="dropdown">
-                    <a href="{% url 'products' %}" class="{% if 'product' in request.resolver_match.url_name %}active{% endif %}">
-                        Products <i class="fas fa-chevron-down" style="font-size:0.65rem;margin-left:4px;opacity:0.5;"></i>
-                    </a>
-                    <div class="dropdown-panel">
-                        {% for cat in nav_categories %}
-                        <a href="{% url 'product_category' cat.slug %}">
-                            <i class="fas {{ cat.icon|default:'fa-folder' }}"></i>
-                            {{ cat.name }}
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
-                <a href="{% url 'news' %}" class="{% if 'news' in request.resolver_match.url_name %}active{% endif %}">News</a>
-                <a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
-            </div>
-
-            <div class="nav-right">
-                {% if user.is_authenticated %}
-                    <span class="nav-user"><i class="fas fa-user-circle"></i>{{ user.get_short_name|default:user.username }}</span>
-                    <a href="{% url 'logout' %}" class="btn btn-ghost" style="padding:8px 18px;font-size:0.82rem;">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-ghost" style="padding:8px 18px;font-size:0.82rem;">Log In</a>
-                    <a href="{% url 'register' %}" class="btn btn-primary" style="padding:8px 18px;font-size:0.82rem;">Register</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</nav>
-
-{% if messages %}
-<div class="toast-container">
-    {% for message in messages %}
-    <div class="toast toast-{{ message.tags }}">
-        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
-        {{ message }}
-        <button class="close-toast" onclick="this.parentElement.style.opacity='0';setTimeout(()=>this.parentElement.remove(),300);">&times;</button>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<main class="main">
-    {% block content %}{% endblock %}
-</main>
-
-<footer class="footer">
-    <div class="footer-grid">
-        <div>
-            <div class="footer-brand">
-                <img src="{% static 'images/logo.png' %}" alt="Smart Engineering Logo" class="brand-logo" style="height: 40px; margin-bottom: 10px;">
-            </div>
-            <p class="footer-about">One of the leading companies in the field of Supplying Materials in Egypt, serving Electrical & Safety sectors across the Middle East.</p>
-            <div class="footer-socials">
-                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-        <div class="footer-col">
-            <h4>Quick Links</h4>
-            <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'about' %}">About Us</a>
-            <a href="{% url 'products' %}">Products</a>
-            <a href="{% url 'news' %}">News & Events</a>
-            <a href="{% url 'contact' %}">Contact Us</a>
-        </div>
-        <div class="footer-col">
-            <h4>Products</h4>
-            {% for cat in nav_categories %}
-            <a href="{% url 'product_category' cat.slug %}">{{ cat.name }}</a>
-            {% endfor %}
-        </div>
-        <div class="footer-col">
-            <h4>Contact</h4>
-            <div class="contact-line"><i class="fas fa-map-marker-alt"></i> Cairo, Egypt</div>
-            <div class="contact-line"><i class="fas fa-envelope"></i> info@smart-eg.com</div>
-            <div class="contact-line"><i class="fas fa-phone"></i> +20 123 456 789</div>
-            <div class="contact-line"><i class="fas fa-clock"></i> Sun – Thu, 9AM – 5PM</div>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        &copy; 2026 Smart for Electrical Engineering. All rights reserved.
-    </div>
-</footer>
-
-<button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
-
-<script>
-    /* Navbar scroll */
-    const nb = document.getElementById('navbar');
-    const st = document.getElementById('scrollTop');
-    window.addEventListener('scroll', () => {
-        nb.classList.toggle('scrolled', scrollY > 30);
-        st.classList.toggle('visible', scrollY > 500);
-    });
-
-    /* Mobile menu */
-    const toggle = document.getElementById('navToggle');
-    const navMenu = document.getElementById('navMenu');
-    const overlay = document.getElementById('menuOverlay');
-
-    function toggleMenu() {
-        toggle.classList.toggle('active');
-        navMenu.classList.toggle('open');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = navMenu.classList.contains('open') ? 'hidden' : '';
+{% block extra_css %}
+<style>
+    .about-section { background: var(--white); }
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 72px;
+        align-items: center;
     }
-    toggle.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
+    .about-text .section-label { margin-bottom: 12px; }
+    .about-text h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.5px; }
+    .about-text h2 .hl { color: var(--royal); }
+    .about-text p {
+        font-size: 0.95rem; color: var(--gray-500);
+        line-height: 1.85; margin-bottom: 16px;
+    }
+    .about-visual {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .about-stat {
+        background: var(--gray-50);
+        border-radius: var(--radius-lg);
+        padding: 32px 24px;
+        text-align: center;
+        border: 1px solid var(--gray-100);
+        transition: all 0.35s var(--ease);
+    }
+    .about-stat:hover {
+        background: var(--white);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+        border-color: rgba(27,77,219,0.1);
+    }
+    .about-stat:nth-child(2) { transform: translateY(28px); }
+    .about-stat:nth-child(2):hover { transform: translateY(24px); }
+    .about-stat i { font-size: 1.8rem; color: var(--royal); margin-bottom: 12px; display: block; }
+    .about-stat h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+    .about-stat p { font-size: 0.78rem; color: var(--gray-400); }
 
-    /* Mobile dropdown */
-    document.querySelectorAll('.dropdown > a').forEach(link => {
-        link.addEventListener('click', e => {
-            if (innerWidth <= 1024) {
-                e.preventDefault();
-                link.parentElement.classList.toggle('open');
-            }
-        });
-    });
+    /* VM Section */
+    .vm-section {
+        background: var(--navy);
+        position: relative;
+        overflow: hidden;
+    }
+    .vm-section::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse at 20% 50%, rgba(27,77,219,0.12), transparent 60%);
+    }
+    .vm-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        position: relative;
+    }
+    .vm-card {
+        background: rgba(255,255,255,0.04);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: var(--radius-xl);
+        padding: 44px 36px;
+        transition: all 0.35s var(--ease);
+    }
+    .vm-card:hover {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.1);
+        transform: translateY(-4px);
+    }
+    .vm-icon {
+        width: 52px; height: 52px;
+        border-radius: 14px;
+        background: rgba(245,158,11,0.12);
+        display: grid; place-items: center;
+        color: var(--gold); font-size: 1.2rem;
+        margin-bottom: 24px;
+    }
+    .vm-card h3 { font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .vm-card p { font-size: 0.92rem; color: rgba(255,255,255,0.5); line-height: 1.85; }
 
-    /* Scroll top */
-    st.addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+    /* Values */
+    .values-section { background: var(--white); }
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+    .value-card {
+        padding: 36px 24px;
+        border-radius: var(--radius-lg);
+        background: var(--gray-50);
+        text-align: center;
+        border: 1px solid transparent;
+        transition: all 0.35s var(--ease);
+    }
+    .value-card:hover {
+        background: var(--white);
+        border-color: rgba(27,77,219,0.1);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+    }
+    .value-card i {
+        font-size: 1.6rem; color: var(--royal);
+        margin-bottom: 16px; display: block;
+    }
+    .value-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+    .value-card p { font-size: 0.82rem; color: var(--gray-500); line-height: 1.6; }
 
-    /* Reveal on scroll */
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    @media (max-width: 1024px) {
+        .about-grid { grid-template-columns: 1fr; gap: 48px; }
+        .vm-grid { grid-template-columns: 1fr; }
+        .values-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+        .about-visual { grid-template-columns: 1fr 1fr; gap: 12px; }
+        .about-stat:nth-child(2) { transform: none; }
+        .about-stat:nth-child(2):hover { transform: translateY(-4px); }
+        .values-grid { grid-template-columns: 1fr; }
+        .about-text h2 { font-size: 1.7rem; }
+    }
+</style>
+{% endblock %}
 
-    /* Auto-dismiss toasts */
-    setTimeout(() => {
-        document.querySelectorAll('.toast').forEach(el => {
-            el.style.opacity = '0'; el.style.transform = 'translateX(100%)';
-            setTimeout(() => el.remove(), 400);
-        });
-    }, 5000);
-</script>
-{% block extra_js %}{% endblock %}
-</body>
-</html>
+{% block content %}
+<section class="page-hero">
+    <h1>About Us</h1>
+    <p class="subtitle">Leading the way in Electrical & Safety solutions since day one</p>
+    <div class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="sep">/</span>
+        <span class="current">About Us</span>
+    </div>
+</section>
+
+<section class="section about-section">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-text reveal">
+                <div class="section-label">Who We Are</div>
+                <h2>Empowering Industry with <span class="hl">Smart</span> Solutions</h2>
+                <p>Smart for Electrical Engineering is one of the leading companies in the field of Supplying Materials in Egypt. Smart has managed to sustain its success in a continuously changing market through a constant focus on innovation and evolving business practices, while maintaining the highest ethical standards and meeting customer needs.</p>
+                <p>The company invests heavily every year to find the best combination of materials, technology and design to ensure the delivery of products that are reasonably priced without compromising quality nor durability.</p>
+                <p>We deliver diversified needs for our customers through two main business sectors: <strong>Electrical & Safety</strong>. Each division is fully supported by renowned international brand names.</p>
+            </div>
+            <div class="about-visual reveal reveal-delay-1">
+                <div class="about-stat">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Electrical</h3>
+                    <p>Engineering Solutions</p>
+                </div>
+                <div class="about-stat">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Safety</h3>
+                    <p>Products & Equipment</p>
+                </div>
+                <div class="about-stat">
+                    <i class="fas fa-globe-africa"></i>
+                    <h3>Egypt</h3>
+                    <p>Regional Coverage</p>
+                </div>
+                <div class="about-stat">
+                    <i class="fas fa-star"></i>
+                    <h3>Quality</h3>
+                    <p>Certified Standards</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section vm-section">
+    <div class="container">
+        <div class="vm-grid">
+            <div class="vm-card reveal">
+                <div class="vm-icon"><i class="fas fa-eye"></i></div>
+                <h3>Our Vision</h3>
+                <p>To become the Middle East's premier supplying company, providing innovative and affordable solutions. We aim to be the most valued supplier and business partner in the region.</p>
+            </div>
+            <div class="vm-card reveal reveal-delay-1">
+                <div class="vm-icon"><i class="fas fa-bullseye"></i></div>
+                <h3>Our Mission</h3>
+                <p>We are dedicated to developing and selling modern high-quality products for various industries. Our diversified experience and trusted name in the electrical & safety market drive our service and excellence.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section values-section">
+    <div class="container">
+        <div class="section-header center reveal">
+            <div class="section-label">What Drives Us</div>
+            <h2 class="section-title">Our Core Values</h2>
+        </div>
+        <div class="values-grid">
+            <div class="value-card reveal">
+                <i class="fas fa-gem"></i>
+                <h4>Excellence</h4>
+                <p>We pursue the highest standards in everything we do</p>
+            </div>
+            <div class="value-card reveal reveal-delay-1">
+                <i class="fas fa-lightbulb"></i>
+                <h4>Innovation</h4>
+                <p>Continuously evolving our practices and solutions</p>
+            </div>
+            <div class="value-card reveal reveal-delay-2">
+                <i class="fas fa-balance-scale"></i>
+                <h4>Integrity</h4>
+                <p>Maintaining the highest ethical standards always</p>
+            </div>
+            <div class="value-card reveal reveal-delay-3">
+                <i class="fas fa-users"></i>
+                <h4>Customer Focus</h4>
+                <p>Meeting and exceeding customer expectations</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
